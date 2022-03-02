@@ -185,7 +185,7 @@ fn copy_async_parallel(inp_file_name : &str, out_file_name: &str) -> io::Result<
     Ok(())
 }
 
-fn read_async(args : Args) -> io::Result<u128> {
+fn read_async(args : Args) -> io::Result<u64> {
     let mut ring = IoUring::new(RING_SIZE).unwrap();
     let read_fd  = fs::File::open(&args.inp_file)?;
     let size : usize = fs::metadata(&args.inp_file)?.len() as usize;
@@ -229,10 +229,10 @@ fn read_async(args : Args) -> io::Result<u128> {
         }
     }
     let elapsed = now.elapsed().as_millis();
-    Ok(elapsed)
+    Ok( (size as u64) / (1000 * elapsed as u64) )
 }
 
-fn write_async(args: Args) -> io::Result<u128> {
+fn write_async(args: Args) -> io::Result<u64> {
     let mut ring = IoUring::new(RING_SIZE).unwrap();
     let write_fd = fs::File::create(args.out_file)?;
     let num_bufs = args.num_concurrent;
@@ -275,12 +275,12 @@ fn write_async(args: Args) -> io::Result<u128> {
         }
     }
     let elapsed = now.elapsed().as_millis();
-    Ok(elapsed)
+    Ok(elapsed as u64)
 }
 
 fn main() {
     let args = Args::parse();
-    let mut t : u128 = 0;
+    let mut t : u64 = 0;
     if args.read {
         t = read_async(args).unwrap();
     } else {

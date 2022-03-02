@@ -48,10 +48,9 @@ fn copy_unbuf(inp_file_name : &str, out_file_name: &str) -> io::Result<()> {
     Ok(())
 }
 
-fn read(args: &Args) -> io::Result<u128> {
+fn read(args: &Args) -> io::Result<u64> {
     let inp_file = File::open(&args.inp_file)?;
-
-
+    let mut size : u64 = 0;
     let buf_size: usize = args.buf_size;
     let mut reader = BufReader::with_capacity(buf_size, inp_file);
     let now = Instant::now();
@@ -64,14 +63,15 @@ fn read(args: &Args) -> io::Result<u128> {
             break;
         }
         reader.consume(length);
+        size += length as u64;
     }
 
     let elapsed = now.elapsed().as_millis();
     
-    Ok(elapsed)
+    Ok( size / (1000 * elapsed as u64) )
 }
 
-fn write(args: &Args) -> io::Result<u128> {
+fn write(args: &Args) -> io::Result<u64> {
     let mut out_file = File::create(&args.out_file)?;
     let size: usize = 1024 * 1024 * 1024 * 3;
     let buf: [u8; 4096] = [87; 4096];
@@ -83,12 +83,12 @@ fn write(args: &Args) -> io::Result<u128> {
 
     let elapsed = now.elapsed().as_millis();
     
-    Ok(elapsed)
+    Ok(elapsed as u64)
 }
 
 fn main() {
     let args = Args::parse();
-    let mut t : u128 = 0;
+    let mut t : u64 = 0;
     if args.read {
         t = read(&args).unwrap();
     } else {
