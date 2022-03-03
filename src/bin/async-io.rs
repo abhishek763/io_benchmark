@@ -1,4 +1,4 @@
-use io_uring::{opcode, types, IoUring, squeue};
+use io_uring::{opcode, types, IoUring};
 use std::os::unix::io::AsRawFd;
 use std::{fs, io, str};
 use std::time::{Instant};
@@ -32,6 +32,25 @@ struct Args {
 
 const RING_SIZE: u32 = 8192;
 
+
+pub fn test_file_write_read() {
+    let ring = io_uring::IoUring::new(1).unwrap();
+    let mut probe = io_uring::Probe::new();
+
+    if ring.submitter().register_probe(&mut probe).is_err() {
+        eprintln!("No probe supported");
+        return; 
+    }
+    
+    if probe.is_supported(io_uring::opcode::Read::CODE) {
+        println!("Reading is supported!");
+    } else {
+        println!("Reading is NOT supported!");
+    }
+}
+
+
+// TODO: update to measure using a given number of seconds 
 fn read_async(args : Args) -> io::Result<u64> {
     let mut ring = IoUring::new(RING_SIZE).unwrap();
     let read_fd  = fs::File::open(&args.inp_file)?;
@@ -39,6 +58,7 @@ fn read_async(args : Args) -> io::Result<u64> {
     let num_bufs = args.num_concurrent;
     let mut buf = vec![vec![0; args.buf_size]; num_bufs];
     let mut offsets = vec![0 as i64; num_bufs];
+    let mut read_size: u64 = 0; 
 
     for i in 0..num_bufs {
         offsets[i] = (i as i64) * (buf[0].len() as i64);
@@ -72,10 +92,18 @@ fn read_async(args : Args) -> io::Result<u64> {
                 ring.completion().for_each(drop);
             }
         } else {
-            ring.completion().for_each(drop);
+            ring.completion().for_each(|x| {
+                let idx = x.user_data() as usize;
+                let len = buf[idx].len();
+                // DEBUG: return 22 
+                // https://stackoverflow.com/questions/503878/how-to-know-what-the-errno-means 
+                assert!(x.result() >= 0, "read failed {}", x.result());
+                read_size += len as u64;
+            });
         }
     }
     let elapsed = now.elapsed().as_millis();
+    println!("{} {}", read_size as f64 / 1024.0 / 1024.0, elapsed);
     Ok( (size as u64) / (1000 * elapsed as u64) )
 }
 
@@ -112,6 +140,7 @@ fn write_async(args: Args) -> io::Result<u64> {
         for j in 0..num_bufs {
             offsets[j] += offset_incr;
         }
+        // TODO: what is this donig 
         if args.amortize_cqe {
             let cqe_len = ring.completion().len(); // .collect::<Vec<_>>();
             if (cqe_len as u32) > RING_SIZE-300 {
@@ -127,12 +156,13 @@ fn write_async(args: Args) -> io::Result<u64> {
 }
 
 fn main() {
+    test_file_write_read(); 
     let args = Args::parse();
-    let mut t : u64 = 0;
     if args.read {
-        t = read_async(args).unwrap();
+        let t = read_async(args).unwrap();
+        print!("{}", t);
     } else {
-        t = write_async(args).unwrap();
+        let t = write_async(args).unwrap();
+        print!("{}", t);
     }
-    print!("{}", t);
 }
