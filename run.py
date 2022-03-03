@@ -2,11 +2,11 @@ import os
 import subprocess
 
 def run_benchmark(command):
-    process = subprocess.Popen(cmd.split(), shell=True)
-    output, error = process.communicate()
-    if error:
-        print(error)
-    return output
+    print(command)
+    result = subprocess.run(command.split(), stdout=subprocess.PIPE)
+    if result.stderr:
+        print("error", result.stderr)
+    return result.stdout.decode('utf-8')
 
 clearCacheCmd = "sync; echo 3 | sudo tee /proc/sys/vm/drop_caches;"
 
@@ -28,6 +28,7 @@ with open('read-async.csv', 'w') as f:
                 subprocess.Popen(clearCacheCmd.split(), shell=True)
                 cmd = "./target/release/async-io -i {0} -b {1} -n {2} -r -a".format(inp_file, buf_size, num_concurrent)
                 out = run_benchmark(cmd)
+                print("stdout", out)
                 f.write('{0},{1},{2},{3}\n'.format(inp_file, buf_size, num_concurrent, out))
 
 with open('write-async.csv', 'w') as f:

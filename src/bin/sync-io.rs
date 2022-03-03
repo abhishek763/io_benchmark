@@ -51,7 +51,7 @@ fn write(args: &Args) -> io::Result<u64> {
     let mut out_file = File::create(&args.out_file)?;
     let s = args.out_file[..1].parse::<usize>().unwrap();
     let size: usize = 1024 * 1024 * 1024 * s;
-    let buf: [u8; 4096] = [87; 4096];
+    let buf = vec![87; args.buf_size];
     let now = Instant::now();
     for _ in 0..(size + args.buf_size - 1)/args.buf_size {
             out_file.write_all(&buf[..])?;

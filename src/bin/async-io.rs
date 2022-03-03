@@ -83,7 +83,7 @@ fn write_async(args: Args) -> io::Result<u64> {
     let mut ring = IoUring::new(RING_SIZE).unwrap();
     let write_fd = fs::File::create(&args.out_file)?;
     let num_bufs = args.num_concurrent;
-    let mut buf = vec![vec![0; args.buf_size]; num_bufs];
+    let mut buf = vec![vec![87; args.buf_size]; num_bufs];
     let mut offsets = vec![0 as i64; num_bufs];
 
     for i in 0..num_bufs {
@@ -94,12 +94,12 @@ fn write_async(args: Args) -> io::Result<u64> {
     let offset_incr : i64 = (args.buf_size as i64) * (buf.len() as i64);
 
     let times = (size+args.buf_size-1)/(buf.len()*buf[0].len());
-
+   
     let now = Instant::now();
     for _i in 0..times {
         for j in 0..num_bufs {
             unsafe {
-                let write_e = opcode::Read::new(types::Fd(write_fd.as_raw_fd()), buf[j].as_mut_ptr(), buf[j].len() as _)
+                let write_e = opcode::Write::new(types::Fd(write_fd.as_raw_fd()), buf[j].as_mut_ptr(), buf[j].len() as _)
                  .offset(offsets[j])
                  .build()
                  .user_data(j as u64);
