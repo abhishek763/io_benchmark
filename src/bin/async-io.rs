@@ -163,7 +163,7 @@ fn read_async(args : Args) -> io::Result<(u64, u64)> {
             }
         } else {
             for i in 0..num_concurrent {
-                offsets[i] += offset_incr;
+                offsets[i] = (offsets[i] + offset_incr) % file_size;
             }
         }
         ring.completion().for_each(|x| {
@@ -219,7 +219,6 @@ fn write_async(args: Args) -> io::Result<(u64, u64)> {
             offsets[j] += offset_incr;
         }
         ring.completion().for_each(|x| {
-            let len = args.vector_len * args.buf_size;
             assert!(x.result() >= 0, "write failed {}", x.result());
             write_size += x.result() as u64;
         });
