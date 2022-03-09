@@ -167,9 +167,8 @@ fn read_async(args : Args) -> io::Result<(u64, u64)> {
             }
         }
         ring.completion().for_each(|x| {
-            let len = args.vector_len * args.buf_size;
             assert!(x.result() >= 0, "read failed {}", x.result());
-            read_size += len as u64;
+            read_size += x.result() as u64;
         });
     }
     let elapsed = now.elapsed().as_millis();
@@ -222,7 +221,7 @@ fn write_async(args: Args) -> io::Result<(u64, u64)> {
         ring.completion().for_each(|x| {
             let len = args.vector_len * args.buf_size;
             assert!(x.result() >= 0, "write failed {}", x.result());
-            write_size += len as u64;
+            write_size += x.result() as u64;
         });
     }
     let elapsed = now.elapsed().as_millis();
