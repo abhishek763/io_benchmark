@@ -1,7 +1,8 @@
-use std::fs::File;
-use std::io::{self, prelude::*, BufReader};
+use std::fs;
+use std::fs::{File};
+use std::io::{self, prelude::*, SeekFrom};
 use std::time::{Instant};
-
+use rand::Rng;
 use clap::Parser;
 
 #[derive(Parser, Debug)]
@@ -20,55 +21,64 @@ struct Args {
     read: bool,
 
     #[clap(short, long)]
-    write: bool
+    write: bool,
+
+    #[clap(short, long, default_value_t = 3)]
+    test_duration: u64,
+
+    #[clap(long)]
+    random: bool
 }
 
 
-fn read(args: &Args) -> io::Result<u64> {
-    let inp_file = File::open(&args.inp_file)?;
-    let mut size : u64 = 0;
+fn read(args: &Args) -> io::Result<(u64, u64)> {
+    let mut inp_file = File::open(&args.inp_file)?;
     let buf_size: usize = args.buf_size;
-    let mut reader = BufReader::with_capacity(buf_size, inp_file);
+    let mut buf = vec![0; buf_size];
+    let file_size : i64 = fs::metadata(&args.inp_file)?.len() as i64;
+
+    let mut read_size = 0;
     let now = Instant::now();
-    loop {
-        let length = {
-            let buffer = reader.fill_buf()?;
-            buffer.len()
-        };
+    while now.elapsed().as_secs() < args.test_duration {
+        let length = io::Read::by_ref(&mut inp_file).take(buf_size as u64).read_to_end(&mut buf)?;
         if length == 0 {
-            break;
+           inp_file.seek(SeekFrom::Start(0))?;
         }
-        reader.consume(length);
-        size += length as u64;
+        read_size += length as u64;
+
+        if args.random {
+            rand::thread_rng().gen_range(0, file_size);
+        }
     }
 
     let elapsed = now.elapsed().as_millis();
-    
-    Ok( size / (1000 * elapsed as u64) )
+
+    Ok((read_size, (elapsed as u64)))
 }
 
-fn write(args: &Args) -> io::Result<u64> {
+fn write(args: &Args) -> io::Result<(u64, u64)> {
     let mut out_file = File::create(&args.out_file)?;
-    let s = args.out_file[..1].parse::<usize>().unwrap();
-    let size: usize = 1024 * 1024 * 1024 * s;
-    let buf = vec![87; args.buf_size];
-    let now = Instant::now();
-    for _ in 0..(size + args.buf_size - 1)/args.buf_size {
-            out_file.write_all(&buf[..])?;
-    };
+    let buf = vec![80; args.buf_size];
 
+    let mut write_size = 0;
+    let now = Instant::now();
+    while now.elapsed().as_secs() < args.test_duration {
+        let length = io::Write::by_ref(&mut out_file).write(&buf)?;
+        write_size += length as u64;
+        out_file.sync_all()?;
+    }
     let elapsed = now.elapsed().as_millis();
     
-    Ok( (size as u64) / (1000 * elapsed as u64))
+    Ok((write_size, elapsed as u64))
 }
 
 fn main() {
     let args = Args::parse();
-    let mut t : u64 = 0;
     if args.read {
-        t = read(&args).unwrap();
+        let (bytes, ms) = read(&args).unwrap();
+        print!("read,{:.4}MB,{:.2}MB/s", (bytes as f64) / 1000000.0, (bytes as f64) / (1000.0 * ms as f64));
     } else {
-        t = write(&args).unwrap();
+        let (bytes, ms) = write(&args).unwrap();
+        print!("write,{:.4}MB,{:.2}MB/s", (bytes as f64) / 1000000.0, (bytes as f64) / (1000.0 * ms as f64));
     }
-    print!("{}", t);
 }
