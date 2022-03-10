@@ -19,7 +19,7 @@ def plot_buf_size(file):
     plt.ylabel('Bandwidth (MB/s)')
     plt.title(file)
     for i,j in zip(t.index,t['bandwidth']):
-        plt.annotate(str(int(j)) + "," + str(i),xy=(i,j))
+        plt.annotate(str(i) + "," + str(int(j)),xy=(i,j))
     plt.savefig(file.split('.')[0] + '_buffer.png')
     print("Saved to " + file.split('.')[0] + '_buffer.png')
     plt.close()
@@ -32,7 +32,7 @@ def plot_vector_len(file):
     plt.xlabel('Vector Length')
     plt.ylabel('Bandwidth (MB/s)')
     for i,j in zip(t.index,t['bandwidth']):
-        plt.annotate(str(int(j)) + "," + str(i),xy=(i,j))
+        plt.annotate(str(i)+ "," + str(int(j)) ,xy=(i,j))
     plt.title(file)
     plt.savefig(file.split('.')[0] + '_vec_len.png')
     print("Saved to " + file.split('.')[0] + '_vec_len.png')
@@ -46,7 +46,7 @@ def plot_num_concurrent(file):
     plt.xlabel('Number of Concurrent Requests')
     plt.ylabel('Bandwidth (MB/s)')
     for i,j in zip(t.index,t['bandwidth']):
-        plt.annotate(str(int(j)) + "," + str(i),xy=(i,j))
+        plt.annotate(str(i) + "," + str(int(j)),xy=(i,j))
     plt.title(file)
     plt.savefig(file.split('.')[0] + '_num_concurrent.png')
     print("Saved to " + file.split('.')[0] + '_num_concurrent.png')

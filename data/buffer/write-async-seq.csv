@@ -1,0 +1,7 @@
+input_file,buffer_size,num_concurrent,vector_len,type,read_size,bandwidth
+/mnt/abhi/temp,1024,4,4,write,4472.1111MB,894.42MB/s
+/mnt/abhi/temp,4096,4,4,write,8235.5814MB,1647.12MB/s
+/mnt/abhi/temp,16384,4,4,write,9288.5484MB,1857.71MB/s
+/mnt/abhi/temp,65536,4,4,write,9703.5223MB,1940.70MB/s
+/mnt/abhi/temp,262144,4,4,write,8929.6732MB,1785.93MB/s
+/mnt/abhi/temp,1048576,4,4,write,8019.5092MB,1601.02MB/s

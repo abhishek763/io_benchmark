@@ -1,7 +1,0 @@
-input_file,buffer_size,type,read_size,bandwidth
-/users/ak5/read.bin,1024,write,60.6136MB,15.15MB/s
-/users/ak5/read.bin,4096,write,205.2137MB,51.30MB/s
-/users/ak5/read.bin,16384,write,689.3896MB,172.35MB/s
-/users/ak5/read.bin,65536,write,1790.4435MB,447.61MB/s
-/users/ak5/read.bin,262144,write,3056.8612MB,764.22MB/s
-/users/ak5/read.bin,1048576,write,3730.8334MB,932.71MB/s
