@@ -95,5 +95,5 @@ with open('write-async-seq.csv', 'w') as f:
                     cmd = "./target/release/async-io -o {0} -b {1} -n {2} -w -t {3} -v {4}".format("temp", buf_size, num_concurrent, time, v)
                     e, out = run_benchmark(cmd)
                     if e == 0:
-                        f.write('{0},{1},{2},{3}\n'.format(inp_file, buf_size, num_concurrent, v, out))
+                        f.write('{0},{1},{2},{3},{4}\n'.format("temp", buf_size, num_concurrent, v, out))
                     subprocess.Popen("rm temp".split(), shell=True)

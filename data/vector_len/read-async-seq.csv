@@ -1,0 +1,7 @@
+input_file,buffer_size,num_concurrent,vector_len,type,read_size,bandwidth
+/mnt/abhi/read.bin,4096,4,1,read,28380.6433MB,5676.13MB/s
+/mnt/abhi/read.bin,4096,4,4,read,30860.3126MB,6172.06MB/s
+/mnt/abhi/read.bin,4096,4,16,read,32792.9037MB,6558.58MB/s
+/mnt/abhi/read.bin,4096,4,64,read,35349.5941MB,7069.92MB/s
+/mnt/abhi/read.bin,4096,4,256,read,39686.5044MB,7935.71MB/s
+/mnt/abhi/read.bin,4096,4,1024,read,40718.3032MB,8143.66MB/s

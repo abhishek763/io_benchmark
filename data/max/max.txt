@@ -1,0 +1,6 @@
+./target/release/async-io -i /mnt/abhi/read.bin -b 16384 -n 1024 -r -t 5 -v 8
+./target/release/async-io -i /mnt/abhi/read.bin -b 64 -n 4 -v 1024 -r -t 5 --random
+./target/release/sync-io -i /mnt/abhi/read.bin -b 64 -r -t 5 --random
+./target/release/sync-io -i /mnt/abhi/read.bin -b 64 -r -t 5 --random
+./target/release/sync-io -o /mnt/abhi/temp -b 104857 -w -t 5
+./target/release/async-io -o /mnt/abhi/temp -b 4096 -w -t 5 -n 4 -v 64
