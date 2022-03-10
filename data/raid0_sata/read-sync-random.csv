@@ -1,0 +1,4 @@
+input_file,buffer_size,type,read_size,bandwidth
+/mnt/abhi/read.bin,64,read,942.8663MB,188.57MB/s
+/mnt/abhi/read.bin,128,read,1812.5924MB,362.52MB/s
+/mnt/abhi/read.bin,256,read,3265.9379MB,653.19MB/s

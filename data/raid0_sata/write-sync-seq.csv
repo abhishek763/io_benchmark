@@ -1,0 +1,4 @@
+input_file,buffer_size,type,read_size,bandwidth
+/mnt/abhi/temp,1024,write,38.4389MB,7.69MB/s
+/mnt/abhi/temp,4096,write,133.4682MB,26.69MB/s
+/mnt/abhi/temp,65536,write,1027.2768MB,205.46MB/s

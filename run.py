@@ -12,7 +12,9 @@ def run_benchmark(command):
 clearCacheCmd = "sync; echo 3 | sudo tee /proc/sys/vm/drop_caches;"
 
 inp_files = [ '/users/ak5/read.bin']
+out_file = '/users/ak5/write.bin'
 buf_sizes = [1024, 4096, 16384, 65536, 262144, 1048576]
+buf_random = [64, 128, 256, 512]
 vector_lens = [1, 4, 16, 64, 256, 1024, 4096, 16384]
 num_concurrents = [1, 4, 8, 16, 32, 64, 128, 256]
 time = 4
@@ -21,6 +23,7 @@ time = 4
 ''' Small params
 inp_files = [ '/home/ubuntu/read_small.bin']
 buf_sizes = [1024]
+buf_random = [64]
 vector_lens = [2]
 num_concurrents = [4]
 time = 3
@@ -43,7 +46,7 @@ with open('read-async-seq.csv', 'w') as f:
 with open('read-async-random.csv', 'w') as f:
     f.write('input_file,buffer_size,num_concurrent,vector_len,type,read_size,bandwidth\n')
     for inp_file in inp_files:
-        for buf_size in buf_sizes:
+        for buf_size in buf_random:
             for num_concurrent in num_concurrents:
                 for v in vector_lens:
                     subprocess.Popen(clearCacheCmd.split(), shell=True)
@@ -66,7 +69,7 @@ with open('read-sync-seq.csv', 'w') as f:
 with open('read-sync-random.csv', 'w') as f:
     f.write('input_file,buffer_size,type,read_size,bandwidth\n')
     for inp_file in inp_files:
-        for buf_size in buf_sizes:
+        for buf_size in buf_random:
                 subprocess.Popen(clearCacheCmd.split(), shell=True)
                 cmd = "./target/release/sync-io -i {0} -b {1} -r --random -t {2}".format(inp_file, buf_size, time)
                 e, out = run_benchmark(cmd)
@@ -78,11 +81,11 @@ with open('write-sync-seq.csv', 'w') as f:
     for inp_file in inp_files:
         for buf_size in buf_sizes:
                 subprocess.Popen(clearCacheCmd.split(), shell=True)
-                cmd = "./target/release/sync-io -o {0} -b {1} -w -t {2}".format("temp", buf_size, time)
+                cmd = "./target/release/sync-io -o {0} -b {1} -w -t {2}".format(out_file, buf_size, time)
                 e, out = run_benchmark(cmd)
                 if e == 0:
-                    f.write('{0},{1},{2}\n'.format(inp_file, buf_size, out))
-                subprocess.Popen("rm temp".split(), shell=True)
+                    f.write('{0},{1},{2}\n'.format(out_file, buf_size, out))
+                os.remove(out_file)
 
 
 with open('write-async-seq.csv', 'w') as f:
@@ -92,8 +95,8 @@ with open('write-async-seq.csv', 'w') as f:
             for num_concurrent in num_concurrents:
                 for v in vector_lens:
                     subprocess.Popen(clearCacheCmd.split(), shell=True)
-                    cmd = "./target/release/async-io -o {0} -b {1} -n {2} -w -t {3} -v {4}".format("temp", buf_size, num_concurrent, time, v)
+                    cmd = "./target/release/async-io -o {0} -b {1} -n {2} -w -t {3} -v {4}".format(out_file, buf_size, num_concurrent, time, v)
                     e, out = run_benchmark(cmd)
                     if e == 0:
-                        f.write('{0},{1},{2},{3},{4}\n'.format("temp", buf_size, num_concurrent, v, out))
-                    subprocess.Popen("rm temp".split(), shell=True)
+                        f.write('{0},{1},{2},{3},{4}\n'.format(out_file, buf_size, num_concurrent, v, out))
+                    os.remove(out_file)
