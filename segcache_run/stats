@@ -1,0 +1,52 @@
+target/release/bench  -r 300 -c 8192 -m segcachev1 -i /mntData2/cluster52.oracleSysTwrNS_34G -n 26 -> SegCachev1(size_MB 8192, "segcachev1"), 1045277775 req, trace 13.00 hour, 188.93 sec, throughput 5.53 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+unbounded (41G)
+SegCachev1(size_MB 8192, "segcachev1"), 1045271240 req, trace 13.00 hour, 252.56 sec, throughput 4.14 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+35G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045267298 req, trace 13.00 hour, 265.80 sec, throughput 3.93 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+30G
+SegCachev1(size_MB 8192, "segcachev1"), 1045247249 req, trace 13.00 hour, 255.23 sec, throughput 4.10 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+25G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045248741 req, trace 13.00 hour, 248.74 sec, throughput 4.20 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+20G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045251735 req, trace 13.00 hour, 246.86 sec, throughput 4.08 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+15G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045253298 req, trace 13.00 hour, 260.65 sec, throughput 4.01 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+
+10G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045259581 req, trace 13.00 hour, 486.68 sec, throughput 2.15 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+SegCachev1(size_MB 8192, "segcachev1"), 1045260887 req, trace 13.00 hour, 768.96 sec, throughput 1.36 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+8G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045262006 req, trace 13.00 hour, 1043.11 sec, throughput 1.00 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+
+
+6G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045267301 req, trace 13.00 hour, 6583.77 sec, throughput 0.16 MQPS, miss ratio 0.0453, write ratio 0.0
+435, remove ratio 0.0000
+
+5G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045250824 req, trace 13.00 hour, 6619.24 sec, throughput 0.16 MQPS, miss ratio 0.0453, write ratio 0.0435, remove ratio 0.0000
+
+4G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045244583 req, trace 13.00 hour, 6625.72 sec, throughput 0.16 MQPS, miss ratio 0.0453, write ratio 0.0
+434, remove ratio 0.0000
+
+3G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045272882 req, trace 13.00 hour, 6625.30 sec, throughput 0.16 MQPS, miss ratio 0.0453, write ratio 0.0
+435, remove ratio 0.0000
+
+2G RAM
+SegCachev1(size_MB 8192, "segcachev1"), 1045271507 req, trace 13.00 hour, 6591.28 sec, throughput 0.16 MQPS, miss ratio 0.0453, write ratio 0.0
+435, remove ratio 0.0000
+
+1G RAM
+Killed
