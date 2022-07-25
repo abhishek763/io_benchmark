@@ -2,7 +2,7 @@
 
 - For compiling ```cargo build --release```
 
-- For benchmarking async reading ```./target/release/async-io -i <inp file> -b <buf size> -n <num of parallel reads> -r -a -t 3```
+- For benchmarking async reading ```./target/release/async-io -i <inp file> -b <buf size> -n <num of parallel reads> -r -t 3```
   - Can add flags --random for random I/O
 - For benchmarking async writing ```./target/release/async-io -o 5G -b <buf size> -w```
 
